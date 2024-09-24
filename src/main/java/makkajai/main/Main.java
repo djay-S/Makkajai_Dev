@@ -10,10 +10,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        test1();
-    }
-
-    private static void test1() {
         List<Topic> topicList = getTopicList1();
         List<Event> eventList = getEventList();
 
@@ -30,30 +26,31 @@ public class Main {
         printSchedule("Track 2", scheduledTopic);
     }
 
+
     private static void printSchedule(String track, List<Topic> topicList) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(track).append("\n");
 
-            for (Topic topic : topicList) {
-                boolean isAfter12 = topic.getEndTime().compareTo(LocalTime.of(12, 00)) >= 0;
-                boolean isBefore13 = topic.getStartTime().compareTo(LocalTime.of(13, 00)) <= 0;
-                if (isAfter12 && isBefore13) {
-                    stringBuilder.append("12:00 ")
-                            .append("Lunch\n");
-                }
-                stringBuilder.append(topic.getStartTime())
-                        .append(" ")
-                        .append(topic.getTopicName())
-                        .append(" - ")
-                        .append(topic.getDurationInMins())
-                        .append("mins")
-                        .append("\n");
+        for (Topic topic : topicList) {
+            boolean isAfter12 = topic.getEndTime().compareTo(LocalTime.of(12, 0)) >= 0;
+            boolean isBefore13 = topic.getStartTime().compareTo(LocalTime.of(13, 0)) <= 0;
+            if (isAfter12 && isBefore13) {
+                stringBuilder.append("12:00 ")
+                        .append("Lunch\n");
             }
-
-            stringBuilder
-                    .append(topicList.get(topicList.size() - 1).getEndTime())
+            stringBuilder.append(topic.getStartTime())
                     .append(" ")
-                    .append("Networking Event");
+                    .append(topic.getTopicName())
+                    .append(" - ")
+                    .append(topic.getDurationInMins())
+                    .append("mins")
+                    .append("\n");
+        }
+
+        stringBuilder
+                .append(topicList.get(topicList.size() - 1).getEndTime())
+                .append(" ")
+                .append("Networking Event");
 
         System.out.println(stringBuilder);
     }
@@ -66,8 +63,7 @@ public class Main {
             Duration eventDuration = Duration.between(event.getStartTime(), event.getEndTime());
             if ("Morning Session".equalsIgnoreCase(event.getName())) {
                 eventDurationInMins = eventDuration.toMinutes();
-            }
-            else {
+            } else {
                 eventDurationInMins = eventDuration.toMinutes() + event.getEndTimeWindowInMins();
             }
             ArrayList<Topic> resultantTopics = new ArrayList<>();
@@ -106,14 +102,44 @@ public class Main {
     }
 
     private static List<Event> getEventList() {
-        Event morningSession = Event.builder().name("Morning Session").startTime(LocalTime.of(9, 0)).endTime(LocalTime.of(12, 0)).build();
+        Event morningSession = Event.builder()
+                .name("Morning Session")
+                .startTime(LocalTime.of(9, 0))
+                .endTime(LocalTime.of(12, 0))
+                .build();
 
-        Event afternoonSession = Event.builder().name("Afternoon Session").startTime(LocalTime.of(13, 0)).endTime(LocalTime.of(16, 0)).endTimeWindowInMins(60).build();
+        Event afternoonSession = Event.builder()
+                .name("Afternoon Session")
+                .startTime(LocalTime.of(13, 0))
+                .endTime(LocalTime.of(16, 0))
+                .endTimeWindowInMins(60)
+                .build();
 
         return List.of(morningSession, afternoonSession);
     }
 
     private static List<Topic> getTopicList1() {
-        return new ArrayList<>(List.of(new Topic("Writing Fast Tests Against Enterprise Rails ", 60), new Topic("Overdoing it in Python", 45), new Topic("Lua for the Masses", 30), new Topic("Ruby Errors from Mismatched Gem Versions", 45), new Topic("Common Ruby Errors", 45), new Topic("Rails for Python Developers lightning Communicating Over Distance", 60), new Topic("Accounting-Driven Development", 45), new Topic("Woah", 30), new Topic("Sit Down and Write", 30), new Topic("Pair Programming vs Noise", 45), new Topic("Rails Magic", 60), new Topic("Ruby on Rails: Why We Should Move On", 60), new Topic("Clojure Ate Scala (on my project)", 45), new Topic("Programming in the Boondocks of Seattle", 30), new Topic("Ruby vs. Clojure for Back-End Development", 30), new Topic("Ruby on Rails Legacy App Maintenance", 60), new Topic("A World Without HackerNews", 30), new Topic("User Interface CSS in Rails Apps", 30)));
+        return new ArrayList<>(
+                List.of(
+                        new Topic("Writing Fast Tests Against Enterprise Rails ", 60),
+                        new Topic("Overdoing it in Python", 45),
+                        new Topic("Lua for the Masses", 30),
+                        new Topic("Ruby Errors from Mismatched Gem Versions", 45),
+                        new Topic("Common Ruby Errors", 45),
+                        new Topic("Rails for Python Developers lightning Communicating Over Distance", 60),
+                        new Topic("Accounting-Driven Development", 45),
+                        new Topic("Woah", 30),
+                        new Topic("Sit Down and Write", 30),
+                        new Topic("Pair Programming vs Noise", 45),
+                        new Topic("Rails Magic", 60),
+                        new Topic("Ruby on Rails: Why We Should Move On", 60),
+                        new Topic("Clojure Ate Scala (on my project)", 45),
+                        new Topic("Programming in the Boondocks of Seattle", 30),
+                        new Topic("Ruby vs. Clojure for Back-End Development", 30),
+                        new Topic("Ruby on Rails Legacy App Maintenance", 60),
+                        new Topic("A World Without HackerNews", 30),
+                        new Topic("User Interface CSS in Rails Apps", 30)
+                )
+        );
     }
 }
