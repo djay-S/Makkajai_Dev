@@ -10,6 +10,10 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        generateTracks();
+    }
+
+    private static void generateTracks() {
         List<Topic> topicList = getTopicList1();
         List<Event> eventList = getEventList();
 
@@ -33,11 +37,8 @@ public class Main {
 
         for (Topic topic : topicList) {
             boolean isAfter12 = topic.getEndTime().compareTo(LocalTime.of(12, 0)) >= 0;
-            boolean isBefore13 = topic.getStartTime().compareTo(LocalTime.of(13, 0)) <= 0;
-            if (isAfter12 && isBefore13) {
-                stringBuilder.append("12:00 ")
-                        .append("Lunch\n");
-            }
+            boolean isBefore13 = topic.getStartTime().compareTo(LocalTime.of(13, 0)) < 0;
+
             stringBuilder.append(topic.getStartTime())
                     .append(" ")
                     .append(topic.getTopicName())
@@ -45,12 +46,19 @@ public class Main {
                     .append(topic.getDurationInMins())
                     .append("mins")
                     .append("\n");
+
+            if (isAfter12 && isBefore13) {
+                stringBuilder.append("12:00 ")
+                        .append("Lunch\n");
+            }
         }
 
+        Topic lastTopic = topicList.get(topicList.size() - 1);
+        LocalTime endTime = lastTopic.getStartTime().plus(lastTopic.getDurationInMins(), ChronoUnit.MINUTES);
         stringBuilder
-                .append(topicList.get(topicList.size() - 1).getEndTime())
+                .append(endTime)
                 .append(" ")
-                .append("Networking Event");
+                .append("Networking Event\n");
 
         System.out.println(stringBuilder);
     }
